@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "PokerSession": {
+      "title": "PokerSession",
+      "description": "Represents a Planning Poker estimation session.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "deckType": { "type": "string", "enum": ["fibonacci", "tshirt", "standard"] },
+        "creatorId": { "type": "string" },
+        "creatorName": { "type": "string" },
+        "activeStoryId": { "type": "string" },
+        "revealed": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "deckType", "creatorId", "creatorName", "revealed", "createdAt"]
+    },
+    "PokerParticipant": {
+      "title": "PokerParticipant",
+      "description": "A participant in a planning poker room (user or guest).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "joinedAt": { "type": "string" },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["id", "name", "joinedAt", "isActive"]
+    },
+    "PokerStory": {
+      "title": "PokerStory",
+      "description": "A user story or task ticket to be estimated.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "finalEstimate": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "voting", "completed"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "status", "createdAt"]
+    },
+    "PokerVote": {
+      "title": "PokerVote",
+      "description": "A vote submitted by a participant for the active story.",
+      "type": "object",
+      "properties": {
+        "participantId": { "type": "string" },
+        "participantName": { "type": "string" },
+        "vote": { "type": "string" },
+        "votedAt": { "type": "string" }
+      },
+      "required": ["participantId", "participantName", "votedAt"]
+    }
+  },
+  "firestore": {
+    "/poker_sessions/{sessionId}": {
+      "schema": "PokerSession",
+      "description": "Collection of planning poker rooms."
+    },
+    "/poker_sessions/{sessionId}/participants/{participantId}": {
+      "schema": "PokerParticipant",
+      "description": "Participants in a planning poker session."
+    },
+    "/poker_sessions/{sessionId}/stories/{storyId}": {
+      "schema": "PokerStory",
+      "description": "Task/issues listed for estimation in a session."
+    },
+    "/poker_sessions/{sessionId}/votes/{voteId}": {
+      "schema": "PokerVote",
+      "description": "Votes submitted by active participants for the active story."
+    }
+  }
+}

@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Users collection
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 2. Planning Poker Sessions
+    match /poker_sessions/{sessionId} {
+      // Anyone can read a session (public url sharing)
+      allow read, list: if true;
+      
+      // Signed-in users can create sessions
+      allow create: if request.auth != null;
+      
+      // Updates and Deletes can only be performed by the creator of the session
+      allow update, delete: if request.auth != null && resource.data.creatorId == request.auth.uid;
+
+      // Sub-collections: Participants inside a session
+      match /participants/{participantId} {
+        // Guests/public users must be able to read, write, and delete their participant records
+        allow read, write, delete: if true;
+      }
+
+      // Sub-collections: Stories/tickets under a session
+      match /stories/{storyId} {
+        // Guests can read the backlog
+        allow read: if true;
+        // Authenticated users can write/delete stories in sessions
+        allow write, delete: if request.auth != null;
+      }
+
+      // Sub-collections: Votes submitted for a story
+      match /votes/{voteId} {
+        // Guests must be able to view, cast, and clean up votes
+        allow read, write, delete: if true;
+      }
+    }
+  }
+}

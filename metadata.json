@@ -1,0 +1,6 @@
+{
+  "name": "Dev Command",
+  "description": "Real-time agile workflow command center with Planning Poker, Gantt Timelines, Jira task integrations, SAP CATS logging, and pull request streams.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
