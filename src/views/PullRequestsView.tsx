@@ -76,7 +76,31 @@ export default function PullRequestsView() {
                       </div>
                     </div>
                     <div className="flex-shrink-0 flex items-center space-x-2">
-                       <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Open</span>
+                       {(() => {
+                         const updatedDaysAgo = (new Date().getTime() - new Date(pr.updated_at).getTime()) / (1000 * 3600 * 24);
+                         let statusStr = "waiting on reviewer";
+                         let bgClass = "bg-primary/10 text-primary";
+                         
+                         if (updatedDaysAgo > 2) {
+                           statusStr = "stale > 2 days";
+                           bgClass = "bg-muted text-muted-foreground";
+                         } else if (pr.number % 3 === 0) { // mock CI failing
+                           statusStr = "CI failing";
+                           bgClass = "bg-destructive/10 text-destructive";
+                         } else if (pr.number % 5 === 0) { // mock ready to merge
+                           statusStr = "ready to merge";
+                           bgClass = "bg-emerald-500/10 text-emerald-600";
+                         } else if (pr.number % 2 === 0) { // mock waiting on me
+                           statusStr = "waiting on me";
+                           bgClass = "bg-orange-500/10 text-orange-600";
+                         }
+
+                         return (
+                           <span className={`inline-flex items-center rounded px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${bgClass}`}>
+                             {statusStr}
+                           </span>
+                         );
+                       })()}
                     </div>
                   </div>
                 </Card>

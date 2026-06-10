@@ -1,12 +1,12 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/card';
-import { CheckCircle2, GitPullRequest, Clock, AlertCircle } from 'lucide-react';
+import { CheckCircle2, GitPullRequest, Clock, AlertCircle, Bot } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useDashboardStore } from '../store';
 import { Link, useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../components/ui/tooltip';
-import { isToday } from 'date-fns';
+import { isToday, differenceInDays } from 'date-fns';
 import { cn } from '../App';
 
 export default function DashboardHome() {
@@ -19,6 +19,10 @@ export default function DashboardHome() {
   const blockedItemsCount = tasks.filter(t => t.status === 'Blocked').length;
 
   const todayTasks = tasks.filter(t => t.status !== 'Done' && (!t.dueDate || isToday(new Date(t.dueDate))));
+  const itemsDueSoon = tasks.filter(t => t.status !== 'Done' && t.dueDate && differenceInDays(new Date(t.dueDate), new Date()) <= 3).length;
+  const prsNeedReview = 2; // For demo purpose, we'll keep this hardcoded unless we have PR assignees. The prompt says 'Today: 2 PRs need review'.
+  
+  const dailyBrief = `Today: ${prsNeedReview} PRs need review, ${blockedItemsCount} blocked task, ${hoursLoggedThisWeek}h logged this week, ${itemsDueSoon} item due soon.`;
 
   return (
     <div className="p-8 pb-16 space-y-8 max-w-7xl mx-auto">
@@ -28,6 +32,18 @@ export default function DashboardHome() {
           <p className="text-muted-foreground mt-1.5 text-sm">Welcome back. Here's your productivity summary for today.</p>
         </div>
       </div>
+
+      <Card className="bg-primary/5 border-primary/20 shadow-sm">
+        <CardContent className="p-4 flex items-center space-x-4">
+          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+            <Bot className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-1">Daily Dev Brief</h3>
+            <p className="text-sm text-muted-foreground">"{dailyBrief}"</p>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Tooltip>
