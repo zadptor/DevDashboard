@@ -5,7 +5,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../../components/ui/dialog';
 import { useDashboardStore } from '../store';
-import { Plus, CheckCircle2, Circle, Clock, DownloadCloud } from 'lucide-react';
+import { Plus, CheckCircle2, Circle, Clock, DownloadCloud, AlertCircle, X } from 'lucide-react';
 import { cn } from '../App';
 import axios from 'axios';
 
@@ -14,6 +14,7 @@ export default function TasksView() {
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [completingTask, setCompletingTask] = useState<any>(null);
   const [isLoadingJira, setIsLoadingJira] = useState(false);
+  const [jiraError, setJiraError] = useState<string | null>(null);
 
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,9 +72,13 @@ export default function TasksView() {
 
   const handleLoadJira = async () => {
     setIsLoadingJira(true);
+    setJiraError(null);
     try {
       const res = await axios.get('/api/jira/rest/api/2/search?jql=assignee=currentuser() AND statusCategory != Done');
       const issues = res.data.issues || [];
+      if (issues.length === 0) {
+        setJiraError("No pending issues found assigned to you.");
+      }
       issues.forEach((issue: any) => {
         // Only add if we don't already have a task with this jiraRef
         if (!tasks.find(t => t.jiraRef === issue.key)) {
@@ -94,24 +99,9 @@ export default function TasksView() {
         }
       });
     } catch (e: any) {
-      console.log("Using simulated JIRA issues due to missing JIRA configuration or API error.");
-      // Let's add a mock task if config is missing to demonstrate working functionality
-      if (!tasks.find(t => t.jiraRef === 'MOCK-123')) {
-        addTask({
-          id: Math.random().toString(36).substr(2, 9),
-          title: 'Implement SAP CATS smart filler (Simulated from JIRA)',
-          description: '',
-          status: 'To Do',
-          priority: 'High',
-          project: 'JIRA',
-          estimatedHours: 4,
-          actualHours: 0,
-          jiraRef: 'MOCK-123',
-          sapNetworkCode: 'N-12345',
-          createdAt: new Date(),
-          updatedAt: new Date()
-        });
-      }
+      console.error("Failed to load Jira tasks", e);
+      setJiraError(e?.response?.data?.message || e.message || "Could not connect to Jira. Please check your settings.");
+      // Note: simulated tasks removed to show actual error flow
     } finally {
       setIsLoadingJira(false);
     }
@@ -134,6 +124,19 @@ export default function TasksView() {
       </div>
 
       <div className="py-8">
+        {jiraError && (
+          <div className="mb-8 p-4 bg-destructive/10 border border-destructive/20 rounded-xl flex items-start space-x-3 text-destructive shadow-sm">
+            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <h4 className="text-sm font-semibold">Failed to import issues from Jira</h4>
+              <p className="text-xs mt-1 text-destructive/80 font-medium">{jiraError}</p>
+            </div>
+            <button onClick={() => setJiraError(null)} className="shrink-0 p-1 hover:bg-destructive/20 text-destructive rounded-md transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden mb-8">
           <form onSubmit={handleAddTask} className="p-1">
             <div className="p-3 border-b border-border bg-card">
