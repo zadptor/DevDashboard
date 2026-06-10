@@ -74,7 +74,15 @@ export default function TasksView() {
     setIsLoadingJira(true);
     setJiraError(null);
     try {
-      const res = await axios.get('/api/jira/rest/api/2/search?jql=assignee=currentuser() AND statusCategory != Done');
+      const { jiraDomain, jiraEmail, jiraToken } = config;
+      const headers: Record<string, string> = {};
+      if (jiraDomain) headers['x-jira-domain'] = jiraDomain;
+      if (jiraEmail) headers['x-jira-email'] = jiraEmail;
+      if (jiraToken) headers['x-jira-token'] = jiraToken;
+
+      const res = await axios.get('/api/jira/rest/api/2/search?jql=assignee=currentuser() AND statusCategory != Done', {
+        headers
+      });
       const issues = res.data.issues || [];
       if (issues.length === 0) {
         setJiraError("No pending issues found assigned to you.");
@@ -93,15 +101,21 @@ export default function TasksView() {
             actualHours: 0,
             jiraRef: issue.key,
             sapNetworkCode: issue.key,
+            sapActivity: 'Development',
+            sapActTyp: '100',
             createdAt: new Date(),
             updatedAt: new Date()
           });
         }
       });
     } catch (e: any) {
-      console.error("Failed to load Jira tasks", e);
-      setJiraError(e?.response?.data?.message || e.message || "Could not connect to Jira. Please check your settings.");
-      // Note: simulated tasks removed to show actual error flow
+      // API errors are handled by setting the jiraError state
+      setJiraError(
+        (e?.response?.data?.error ? e.response.data.error + (e.response.data.url ? ` (${e.response.data.url})` : '') : undefined) ||
+        e?.response?.data?.message || 
+        (e?.response?.status === 500 && !e?.response?.data?.error ? "Could not connect to Jira. Check if your Jira domain is correct and reachable." : e.message) || 
+        "Could not connect to Jira. Please check your settings."
+      );
     } finally {
       setIsLoadingJira(false);
     }

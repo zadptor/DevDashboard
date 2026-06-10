@@ -46,34 +46,67 @@ async function startServer() {
   app.all('/api/jira/*', async (req, res) => {
     try {
       const domainHeader = req.headers['x-jira-domain'];
-      const domain = domainHeader ? (Array.isArray(domainHeader) ? domainHeader[0] : domainHeader) : process.env.JIRA_DOMAIN;
+      let domain = (domainHeader ? (Array.isArray(domainHeader) ? domainHeader[0] : domainHeader) : process.env.JIRA_DOMAIN)?.trim();
+      let baseUrl = 'https://' + domain;
+      if (domain && (domain.startsWith('http://') || domain.startsWith('https://'))) {
+         baseUrl = domain;
+      } else if (domain) {
+         baseUrl = 'https://' + domain;
+      }
+      // remove trailing slash form baseUrl
+      baseUrl = baseUrl.replace(/\/$/, '');
       
       const emailHeader = req.headers['x-jira-email'];
-      const email = emailHeader ? (Array.isArray(emailHeader) ? emailHeader[0] : emailHeader) : process.env.JIRA_USER_EMAIL;
+      const email = (emailHeader ? (Array.isArray(emailHeader) ? emailHeader[0] : emailHeader) : process.env.JIRA_USER_EMAIL)?.trim();
       
       const tokenHeader = req.headers['x-jira-token'];
-      const token = tokenHeader ? (Array.isArray(tokenHeader) ? tokenHeader[0] : tokenHeader) : process.env.JIRA_API_TOKEN;
+      const token = (tokenHeader ? (Array.isArray(tokenHeader) ? tokenHeader[0] : tokenHeader) : process.env.JIRA_API_TOKEN)?.trim();
       
-      if (!domain || !email || !token) return res.status(401).json({ error: 'JIRA config missing' });
+      if (!domain || !token) return res.status(401).json({ error: 'JIRA config missing (domain and token are required)' });
 
       // example: /api/jira/rest/api/3/search -> https://{domain}/rest/api/3/search
       const pathPart = req.params[0];
-      const url = `https://${domain}/${pathPart}`;
+      const url = `${baseUrl}/${pathPart}`;
 
-      const basicAuth = Buffer.from(`${email}:${token}`).toString('base64');
-      const response = await axios({
+      let authorizationHeader = '';
+      if (email) {
+        const basicAuth = Buffer.from(`${email}:${token}`).toString('base64');
+        authorizationHeader = `Basic ${basicAuth}`;
+      } else {
+        authorizationHeader = `Bearer ${token}`; // For Jira PAT (Personal Access Token)
+      }
+
+      const config: any = {
         method: req.method,
-        url: url + (req.url.includes('?') ? '?' + req.url.split('?')[1] : ''),
-        data: req.body,
+        url: url + (req.url.includes('?') ? '?' + req.url.split('?').slice(1).join('?') : ''),
         headers: {
-          'Authorization': `Basic ${basicAuth}`,
+          'Authorization': authorizationHeader,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-      });
+      };
+      if (req.method !== 'GET' && req.method !== 'HEAD') {
+        config.data = req.body;
+      }
+      const response = await axios(config);
       res.json(response.data);
     } catch (error: any) {
-      res.status(error.response?.status || 500).json(error.response?.data || { error: 'Jira API error' });
+      if (!error.response) {
+        return res.status(500).json({ error: `Network error or invalid domain. Message: ${error.message}` });
+      }
+      
+      let errorMessage = error.response?.data?.errorMessages?.[0];
+      if (error.response?.status === 401 && !errorMessage) {
+        errorMessage = 'Unauthorized: Incorrect email or API token for Jira.';
+      } else if (!errorMessage) {
+        errorMessage = 'Jira API error';
+      }
+
+      res.status(error.response?.status || 500).json({
+        error: errorMessage,
+        details: error.response?.data,
+        url: error.config?.url
+      });
     }
   });
 
