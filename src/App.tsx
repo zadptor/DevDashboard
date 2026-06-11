@@ -101,7 +101,7 @@ function AppContent({ user, onDemoLogin }: { user: User | null; onDemoLogin: () 
   }
 
   return (
-    <div className="flex h-screen bg-slate-50 font-sans antialiased">
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-950 font-sans antialiased">
       {user && !isPublicPokerRoute && (
         <aside className="w-64 bg-slate-950 text-slate-300 flex flex-col flex-shrink-0 z-10">
           {/* Logo */}

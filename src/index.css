@@ -4,6 +4,7 @@
 @import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant jarvis (&:is(.jarvis *));
 
 @theme inline {
     --font-heading: var(--font-sans);
@@ -48,6 +49,7 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ── Light ─────────────────────────────────────────────────────────────────── */
 :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -83,70 +85,73 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* ── Dark ───────────────────────────────────────────────────────────────────── */
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
+    --background: oklch(0.12 0.005 240);
+    --foreground: oklch(0.96 0 0);
+    --card: oklch(0.17 0.007 240);
+    --card-foreground: oklch(0.96 0 0);
+    --popover: oklch(0.17 0.007 240);
+    --popover-foreground: oklch(0.96 0 0);
+    --primary: oklch(0.88 0 0);
+    --primary-foreground: oklch(0.17 0 0);
+    --secondary: oklch(0.24 0.007 240);
+    --secondary-foreground: oklch(0.96 0 0);
+    --muted: oklch(0.24 0.007 240);
+    --muted-foreground: oklch(0.64 0 0);
+    --accent: oklch(0.24 0.007 240);
+    --accent-foreground: oklch(0.96 0 0);
     --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
+    --border: oklch(1 0 0 / 9%);
+    --input: oklch(1 0 0 / 12%);
+    --ring: oklch(0.50 0 0);
+    --chart-1: oklch(0.75 0 0);
+    --chart-2: oklch(0.55 0 0);
+    --chart-3: oklch(0.42 0 0);
+    --chart-4: oklch(0.34 0 0);
+    --chart-5: oklch(0.24 0 0);
+    --sidebar: oklch(0.10 0.006 240);
+    --sidebar-foreground: oklch(0.96 0 0);
     --sidebar-primary: oklch(0.488 0.243 264.376);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar-accent: oklch(0.24 0.007 240);
+    --sidebar-accent-foreground: oklch(0.96 0 0);
+    --sidebar-border: oklch(1 0 0 / 9%);
+    --sidebar-ring: oklch(0.50 0 0);
 }
 
+/* ── Jarvis (Iron Man HUD) ─────────────────────────────────────────────────── */
 .jarvis {
-    --background: oklch(0.18 0.05 240);
-    --foreground: oklch(0.85 0.1 200);
-    --card: oklch(0.22 0.06 240 / 0.5);
-    --card-foreground: oklch(0.9 0.1 200);
-    --popover: oklch(0.2 0.05 240 / 0.8);
-    --popover-foreground: oklch(0.9 0.1 200);
-    --primary: oklch(0.7 0.15 200); 
-    --primary-foreground: oklch(0.15 0 240);
-    --secondary: oklch(0.25 0.08 240 / 0.7);
-    --secondary-foreground: oklch(0.8 0.1 200);
-    --muted: oklch(0.25 0.08 240 / 0.5);
-    --muted-foreground: oklch(0.6 0.1 200);
-    --accent: oklch(0.3 0.1 240 / 0.5);
-    --accent-foreground: oklch(0.85 0.1 200);
-    --destructive: oklch(0.6 0.2 25);
-    --border: oklch(0.4 0.1 200 / 0.4);
-    --input: oklch(0.4 0.1 200 / 0.3);
-    --ring: oklch(0.7 0.15 200);
-    
-    --sidebar: oklch(0.18 0.05 240 / 0.6);
-    --sidebar-foreground: oklch(0.85 0.1 200);
-    --sidebar-primary: oklch(0.7 0.15 200);
-    --sidebar-primary-foreground: oklch(0.15 0 240);
-    --sidebar-accent: oklch(0.3 0.1 240 / 0.5);
-    --sidebar-accent-foreground: oklch(0.9 0.1 200);
-    --sidebar-border: oklch(0.4 0.1 200 / 0.4);
-    --sidebar-ring: oklch(0.7 0.15 200);
+    --background: oklch(0.05 0.02 222);
+    --foreground: oklch(0.88 0.18 194);
+    --card: oklch(0.09 0.03 222);
+    --card-foreground: oklch(0.90 0.15 194);
+    --popover: oklch(0.09 0.03 222 / 0.97);
+    --popover-foreground: oklch(0.90 0.15 194);
+    --primary: oklch(0.78 0.20 194);
+    --primary-foreground: oklch(0.05 0.02 222);
+    --secondary: oklch(0.13 0.05 222);
+    --secondary-foreground: oklch(0.82 0.14 194);
+    --muted: oklch(0.12 0.04 222);
+    --muted-foreground: oklch(0.58 0.12 194);
+    --accent: oklch(0.14 0.06 222);
+    --accent-foreground: oklch(0.88 0.18 194);
+    --destructive: oklch(0.65 0.22 15);
+    --border: oklch(0.52 0.20 194 / 0.35);
+    --input: oklch(0.52 0.20 194 / 0.18);
+    --ring: oklch(0.78 0.20 194);
+    --radius: 0.375rem;
+    --sidebar: oklch(0.04 0.02 228);
+    --sidebar-foreground: oklch(0.82 0.16 194);
+    --sidebar-primary: oklch(0.78 0.20 194);
+    --sidebar-primary-foreground: oklch(0.05 0.02 222);
+    --sidebar-accent: oklch(0.12 0.05 222);
+    --sidebar-accent-foreground: oklch(0.90 0.18 194);
+    --sidebar-border: oklch(0.52 0.20 194 / 0.22);
+    --sidebar-ring: oklch(0.78 0.20 194);
 }
 
+/* ── Base layer ─────────────────────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -156,28 +161,242 @@
   }
   body {
     @apply text-foreground bg-background;
-    background-image: linear-gradient(to bottom right, var(--color-background), var(--color-muted));
     background-attachment: fixed;
     min-height: 100vh;
   }
   html {
     @apply font-sans;
-    }
-    
-  .jarvis body {
-    background: radial-gradient(circle at center, oklch(0.2 0.05 240) 0%, oklch(0.12 0.03 240) 100%);
-    background-attachment: fixed;
-  }
-  .jarvis .bg-card, 
-  .jarvis .bg-background {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 4px 30px rgba(0, 255, 255, 0.05);
   }
 }
+
+/* ── Card shadows ───────────────────────────────────────────────────────────── */
 .bg-card {
   box-shadow: 0 4px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
 }
 .dark .bg-card {
-  box-shadow: 0 4px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+  box-shadow: 0 4px 20px -4px rgb(0 0 0 / 0.35), 0 2px 6px -2px rgb(0 0 0 / 0.25);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   JARVIS THEME — Iron Man HUD
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Background + grid */
+html.jarvis,
+html.jarvis body {
+  background-color: #010c18 !important;
+}
+html.jarvis body {
+  background-image:
+    linear-gradient(rgba(0, 190, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 190, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(ellipse 90% 70% at 10% 80%, rgba(0, 60, 140, 0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 50% at 90% 10%, rgba(0, 90, 180, 0.18) 0%, transparent 55%) !important;
+  background-size: 48px 48px, 48px 48px, 100% 100%, 100% 100% !important;
+  background-attachment: fixed !important;
+}
+
+/* Scanline overlay */
+html.jarvis body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.07) 3px,
+    rgba(0, 0, 0, 0.07) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Jarvis: transparent page background so grid shows ── */
+html.jarvis .bg-slate-50,
+html.jarvis .bg-slate-950 {
+  background-color: transparent !important;
+}
+
+/* ── Jarvis: panel / card overrides ─────────────────────────────────────────── */
+html.jarvis .bg-white,
+html.jarvis .bg-white\/80 {
+  background-color: rgba(1, 18, 36, 0.82) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+html.jarvis .bg-slate-900,
+html.jarvis .bg-slate-900\/80 {
+  background-color: rgba(0, 12, 28, 0.88) !important;
+}
+
+/* ── Jarvis: sidebar ─────────────────────────────────────────────────────────── */
+html.jarvis aside {
+  background-color: rgba(0, 6, 18, 0.94) !important;
+  border-right: 1px solid rgba(0, 200, 255, 0.15) !important;
+}
+html.jarvis .border-slate-800\/50,
+html.jarvis .border-slate-800\/60 {
+  border-color: rgba(0, 200, 255, 0.14) !important;
+}
+html.jarvis .bg-violet-600 {
+  background-color: rgba(0, 160, 240, 0.90) !important;
+  box-shadow: 0 0 18px rgba(0, 180, 255, 0.45) !important;
+}
+html.jarvis .bg-violet-600\/10 {
+  background-color: rgba(0, 200, 255, 0.10) !important;
+}
+html.jarvis .hover\:bg-slate-900\/50:hover {
+  background-color: rgba(0, 200, 255, 0.07) !important;
+}
+
+/* ── Jarvis: borders ─────────────────────────────────────────────────────────── */
+html.jarvis .border-slate-200\/60,
+html.jarvis .border-slate-200,
+html.jarvis .border-slate-100 {
+  border-color: rgba(0, 200, 255, 0.20) !important;
+}
+html.jarvis .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.jarvis .divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(0, 200, 255, 0.12) !important;
+}
+
+/* ── Jarvis: text overrides ──────────────────────────────────────────────────── */
+html.jarvis .text-slate-900,
+html.jarvis .text-white {
+  color: rgba(160, 245, 255, 0.96) !important;
+}
+html.jarvis .text-slate-800 { color: rgba(140, 235, 255, 0.92) !important; }
+html.jarvis .text-slate-700 { color: rgba(120, 220, 255, 0.88) !important; }
+html.jarvis .text-slate-600 { color: rgba(100, 210, 245, 0.84) !important; }
+html.jarvis .text-slate-500 { color: rgba(80, 185, 225, 0.78) !important; }
+html.jarvis .text-slate-400 { color: rgba(60, 165, 210, 0.72) !important; }
+html.jarvis .text-slate-300 { color: rgba(100, 200, 240, 0.80) !important; }
+html.jarvis .text-slate-200 { color: rgba(140, 230, 255, 0.90) !important; }
+
+/* Active nav + accent */
+html.jarvis .text-violet-400,
+html.jarvis .text-violet-600 {
+  color: rgba(0, 220, 255, 0.92) !important;
+}
+
+/* ── Jarvis: numbers glow ────────────────────────────────────────────────────── */
+html.jarvis .text-3xl {
+  color: rgba(0, 230, 255, 0.97) !important;
+  text-shadow:
+    0 0 12px rgba(0, 220, 255, 0.50),
+    0 0 28px rgba(0, 200, 255, 0.25) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* ── Jarvis: hover rows ──────────────────────────────────────────────────────── */
+html.jarvis .hover\:bg-slate-50\/80:hover,
+html.jarvis .hover\:bg-slate-800\/50:hover {
+  background-color: rgba(0, 200, 255, 0.06) !important;
+}
+
+/* ── Jarvis: progress bars ───────────────────────────────────────────────────── */
+html.jarvis [role="progressbar"] {
+  background-color: rgba(0, 200, 255, 0.14) !important;
+}
+html.jarvis [role="progressbar"] > * {
+  background: linear-gradient(90deg, rgba(0, 180, 255, 0.8), rgba(0, 230, 255, 0.95)) !important;
+  box-shadow: 0 0 8px rgba(0, 220, 255, 0.4) !important;
+}
+
+/* ── Jarvis: card shadows ────────────────────────────────────────────────────── */
+html.jarvis .shadow-sm,
+html.jarvis .bg-card {
+  box-shadow:
+    0 0 0 1px rgba(0, 200, 255, 0.18),
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(0, 180, 255, 0.06) !important;
+}
+
+/* ── Jarvis: AI brief gradient ───────────────────────────────────────────────── */
+html.jarvis .from-violet-500\/10 {
+  --tw-gradient-from: rgba(0, 140, 255, 0.14) !important;
+}
+html.jarvis .via-fuchsia-500\/5 {
+  --tw-gradient-via: rgba(0, 200, 255, 0.06) !important;
+}
+html.jarvis .border-violet-100,
+html.jarvis .border-violet-900\/50 {
+  border-color: rgba(0, 200, 255, 0.25) !important;
+}
+html.jarvis .bg-violet-100,
+html.jarvis .bg-violet-900\/60 {
+  background-color: rgba(0, 160, 255, 0.18) !important;
+}
+html.jarvis .text-violet-700,
+html.jarvis .text-violet-300 {
+  color: rgba(0, 220, 255, 0.90) !important;
+}
+
+/* ── Jarvis: icon boxes ──────────────────────────────────────────────────────── */
+html.jarvis .bg-blue-50,
+html.jarvis .bg-blue-950\/50   { background-color: rgba(0, 100, 220, 0.16) !important; }
+html.jarvis .bg-violet-50,
+html.jarvis .bg-violet-950\/50 { background-color: rgba(0, 140, 255, 0.16) !important; }
+html.jarvis .bg-emerald-50,
+html.jarvis .bg-emerald-950\/50 { background-color: rgba(0, 210, 180, 0.14) !important; }
+html.jarvis .bg-rose-50,
+html.jarvis .bg-rose-950\/50   { background-color: rgba(255, 60, 60, 0.14) !important; }
+html.jarvis .border-blue-100, html.jarvis .border-blue-900\/50   { border-color: rgba(0, 160, 255, 0.30) !important; }
+html.jarvis .border-violet-100, html.jarvis .border-violet-900\/50 { border-color: rgba(0, 180, 255, 0.30) !important; }
+html.jarvis .border-emerald-100, html.jarvis .border-emerald-900\/50 { border-color: rgba(0, 220, 190, 0.30) !important; }
+html.jarvis .border-rose-100, html.jarvis .border-rose-900\/50   { border-color: rgba(255, 80, 80, 0.30) !important; }
+
+/* ── Jarvis: trend chips ─────────────────────────────────────────────────────── */
+html.jarvis .bg-emerald-50,
+html.jarvis .bg-emerald-950\/50 { background-color: rgba(0, 210, 160, 0.14) !important; }
+html.jarvis .bg-slate-100,
+html.jarvis .bg-slate-800       { background-color: rgba(0, 160, 220, 0.12) !important; }
+
+/* ── Jarvis: avatar ──────────────────────────────────────────────────────────── */
+html.jarvis .bg-violet-100,
+html.jarvis .bg-violet-900\/40  { background-color: rgba(0, 140, 255, 0.20) !important; }
+html.jarvis .text-violet-700,
+html.jarvis .text-violet-300    { color: rgba(0, 220, 255, 0.90) !important; }
+
+/* ── Jarvis: search input ────────────────────────────────────────────────────── */
+html.jarvis input[type="text"] {
+  background-color: rgba(0, 20, 45, 0.80) !important;
+  border-color: rgba(0, 200, 255, 0.25) !important;
+  color: rgba(140, 235, 255, 0.95) !important;
+}
+html.jarvis input[type="text"]::placeholder {
+  color: rgba(60, 160, 210, 0.55) !important;
+}
+html.jarvis input[type="text"]:focus {
+  border-color: rgba(0, 220, 255, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.12) !important;
+}
+
+/* ── Jarvis: New Task button ─────────────────────────────────────────────────── */
+html.jarvis .bg-violet-600.rounded-full {
+  background: linear-gradient(135deg, rgba(0, 140, 240, 0.90), rgba(0, 200, 255, 0.80)) !important;
+  box-shadow: 0 0 20px rgba(0, 180, 255, 0.35), 0 0 0 1px rgba(0, 220, 255, 0.20) !important;
+}
+html.jarvis .hover\:bg-violet-700:hover {
+  background-color: rgba(0, 120, 220, 0.95) !important;
+}
+
+/* ── Jarvis: PR icon badges ──────────────────────────────────────────────────── */
+html.jarvis .bg-white.dark\:bg-slate-800 {
+  background-color: rgba(0, 20, 45, 0.80) !important;
+}
+html.jarvis .border-slate-700 {
+  border-color: rgba(0, 200, 255, 0.18) !important;
+}
+
+/* ── Jarvis: scrollbar ───────────────────────────────────────────────────────── */
+html.jarvis *::-webkit-scrollbar { width: 6px; height: 6px; }
+html.jarvis *::-webkit-scrollbar-track { background: rgba(0, 10, 25, 0.5); }
+html.jarvis *::-webkit-scrollbar-thumb {
+  background: rgba(0, 180, 255, 0.30);
+  border-radius: 3px;
+}
+html.jarvis *::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 220, 255, 0.50);
 }
