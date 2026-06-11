@@ -27,7 +27,8 @@ export default function ReportsView() {
       
       const key = `${dateStr}_${network}_${act}_${actTyp}`;
       
-      const ticketRef = task.jiraRef ? `[${task.jiraRef}]` : '';
+      const displayRef = task.mainJiraRef || task.jiraRef;
+      const ticketRef = displayRef ? `[${displayRef}]` : '';
       const textLine = task.shortDescription || task.title;
       const combinedText = ticketRef ? `${ticketRef} ${textLine}` : textLine;
 

@@ -181,7 +181,7 @@ export default function TimelineView() {
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl flex items-center space-x-2">
-                    <span className="font-semibold text-foreground/70">{task.project}</span>
+                    <span className="font-semibold text-foreground/70">{task.mainJiraRef || task.jiraRef || task.project}</span>
                     <span>&bull;</span>
                     <span>Est. {task.estimatedHours}h</span>
                     <span>&bull;</span>

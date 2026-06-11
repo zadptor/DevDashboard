@@ -13,12 +13,12 @@ export default function SettingsView() {
   
   const [githubToken, setGithubToken] = useState(config.githubToken || '');
   const [jiraDomain, setJiraDomain] = useState(config.jiraDomain || '');
-  const [jiraEmail, setJiraEmail] = useState(config.jiraEmail || '');
+  const [jiraUsername, setJiraUsername] = useState(config.jiraUsername || '');
   const [jiraToken, setJiraToken] = useState(config.jiraToken || '');
   const [theme, setTheme] = useState(config.theme || 'system');
 
   const handleSaveIntegrations = () => {
-    setConfig({ githubToken, jiraDomain, jiraEmail, jiraToken });
+    setConfig({ githubToken, jiraDomain, jiraUsername, jiraToken });
     alert('Integrations saved. API proxies will now use these credentials.');
   };
 
@@ -47,7 +47,10 @@ export default function SettingsView() {
           <Card>
             <CardHeader>
               <CardTitle>GitHub Integration</CardTitle>
-              <CardDescription>Generate a personal access token with repo scope.</CardDescription>
+              <CardDescription>
+                Generate a personal access token with repo scope. 
+                <span className="block mt-1 italic text-xs text-muted-foreground">Optional if configured via environment variables (GITHUB_ACCESS_TOKEN).</span>
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -65,8 +68,11 @@ export default function SettingsView() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Jira Cloud Integration</CardTitle>
-              <CardDescription>Enter your Atlassian domain, email, and API token.</CardDescription>
+              <CardTitle>Jira Integration</CardTitle>
+              <CardDescription>
+                Enter your Jira domain, username or email, and API token (or Personal Access Token).
+                <span className="block mt-1 italic text-xs text-muted-foreground">Optional if configured via environment variables (JIRA_DOMAIN, JIRA_USERNAME/JIRA_USER_EMAIL, JIRA_API_TOKEN).</span>
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -80,12 +86,12 @@ export default function SettingsView() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="jira-email">Account Email</Label>
+                  <Label htmlFor="jira-username">Account Username / Email</Label>
                   <Input 
-                    id="jira-email" 
-                    value={jiraEmail} 
-                    onChange={(e) => setJiraEmail(e.target.value)} 
-                    placeholder="dev@company.com" 
+                    id="jira-username" 
+                    value={jiraUsername} 
+                    onChange={(e) => setJiraUsername(e.target.value)} 
+                    placeholder="Username or Email (leave blank for PAT)" 
                   />
                 </div>
               </div>

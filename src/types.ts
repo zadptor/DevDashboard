@@ -16,6 +16,7 @@ export interface Task {
   dueDate?: Date;
   completedDate?: Date;
   jiraRef?: string;
+  mainJiraRef?: string;
   sapNetworkCode?: string;
   sapActivity?: string;
   sapActTyp?: string;

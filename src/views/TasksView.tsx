@@ -10,7 +10,7 @@ import { cn } from '../App';
 import axios from 'axios';
 
 export default function TasksView() {
-  const { tasks, addTask, updateTask, config } = useDashboardStore();
+  const { tasks, addTask, updateTask, removeTask, syncJiraTasks, config } = useDashboardStore();
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [completingTask, setCompletingTask] = useState<any>(null);
   const [isLoadingJira, setIsLoadingJira] = useState(false);
@@ -74,42 +74,34 @@ export default function TasksView() {
     setIsLoadingJira(true);
     setJiraError(null);
     try {
-      const { jiraDomain, jiraEmail, jiraToken } = config;
+      console.log("Starting Jira import...");
+      const { jiraDomain, jiraUsername, jiraToken } = config;
+      console.log("Config loaded - Domain:", jiraDomain, "Username/Email:", jiraUsername ? "Provided" : "Not Provided", "Token:", jiraToken ? "Provided" : "Not Provided");
+      
       const headers: Record<string, string> = {};
       if (jiraDomain) headers['x-jira-domain'] = jiraDomain;
-      if (jiraEmail) headers['x-jira-email'] = jiraEmail;
+      if (jiraUsername) headers['x-jira-username'] = jiraUsername;
       if (jiraToken) headers['x-jira-token'] = jiraToken;
 
-      const res = await axios.get('/api/jira/rest/api/2/search?jql=assignee=currentuser() AND statusCategory != Done', {
-        headers
-      });
+      const jql = encodeURIComponent('assignee=currentuser() AND statusCategory != Done AND status != "Rejected"');
+      const url = `/api/jira/rest/api/2/search?jql=${jql}`;
+      console.log(`Sending GET request to proxy: ${url}`);
+      const res = await axios.get(url, { headers });
+      
+      console.log("Jira response received:", { status: res.status, data: res.data });
       const issues = res.data.issues || [];
+      console.log(`Successfully parsed ${issues.length} issues.`);
       if (issues.length === 0) {
         setJiraError("No pending issues found assigned to you.");
       }
-      issues.forEach((issue: any) => {
-        // Only add if we don't already have a task with this jiraRef
-        if (!tasks.find(t => t.jiraRef === issue.key)) {
-          addTask({
-            id: Math.random().toString(36).substr(2, 9),
-            title: issue.fields.summary,
-            description: '',
-            status: 'To Do',
-            priority: 'Medium',
-            project: issue.fields.project?.key || 'Default',
-            estimatedHours: 4,
-            actualHours: 0,
-            jiraRef: issue.key,
-            sapNetworkCode: issue.key,
-            sapActivity: 'Development',
-            sapActTyp: '100',
-            createdAt: new Date(),
-            updatedAt: new Date()
-          });
-        }
-      });
+      syncJiraTasks(issues);
+      console.log(`Synced tasks from Jira.`);
     } catch (e: any) {
       // API errors are handled by setting the jiraError state
+      console.error("Jira import failed with error:", e);
+      if (e?.response) {
+        console.error("Error response details:", { status: e.response.status, data: e.response.data, headers: e.response.headers });
+      }
       setJiraError(
         (e?.response?.data?.error ? e.response.data.error + (e.response.data.url ? ` (${e.response.data.url})` : '') : undefined) ||
         e?.response?.data?.message || 
@@ -290,9 +282,16 @@ function TaskItem({ task, onToggle }: { key?: string, task: any, onToggle: () =>
           {task.status === 'Done' ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <Circle className="w-5 h-5" />}
         </button>
         <div className="flex flex-col min-w-0 flex-1">
-          <span className={cn("text-sm font-medium pr-4 truncate", task.status === 'Done' && "line-through text-muted-foreground")}>
-            {task.title}
-          </span>
+          <div className="flex items-center gap-2 overflow-hidden">
+            {task.jiraRef && (
+              <span className="text-[10px] font-mono bg-blue-500/10 text-blue-500 hover:text-blue-600 px-1.5 py-0.5 rounded border border-blue-500/20 shrink-0">
+                {task.mainJiraRef || task.jiraRef}
+              </span>
+            )}
+            <span className={cn("text-sm font-medium pr-4 truncate", task.status === 'Done' && "line-through text-muted-foreground")}>
+              {task.title}
+            </span>
+          </div>
           {task.status === 'Done' && task.shortDescription && (
              <span className="text-xs text-muted-foreground truncate mt-1 bg-muted px-2 py-0.5 rounded w-fit">{task.shortDescription}</span>
           )}

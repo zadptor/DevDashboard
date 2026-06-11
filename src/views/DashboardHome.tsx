@@ -120,7 +120,7 @@ export default function DashboardHome() {
                      <div className="min-w-0">
                        <p className="text-sm font-medium leading-none group-hover:text-primary transition-colors truncate">{task.title}</p>
                        <div className="flex items-center space-x-2 mt-1.5">
-                         <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">{task.project}</span>
+                         <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">{task.mainJiraRef || task.jiraRef || task.project}</span>
                          <span className="text-[10px] text-muted-foreground/50">•</span>
                          <span className="text-xs text-muted-foreground">{task.priority} Priority</span>
                        </div>

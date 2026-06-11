@@ -45,6 +45,7 @@ async function startServer() {
   // Proxy for Jira API
   app.all('/api/jira/*', async (req, res) => {
     try {
+      console.log(`[Jira Proxy] Received ${req.method} request for ${req.url}`);
       const domainHeader = req.headers['x-jira-domain'];
       let domain = (domainHeader ? (Array.isArray(domainHeader) ? domainHeader[0] : domainHeader) : process.env.JIRA_DOMAIN)?.trim();
       let baseUrl = 'https://' + domain;
@@ -56,8 +57,8 @@ async function startServer() {
       // remove trailing slash form baseUrl
       baseUrl = baseUrl.replace(/\/$/, '');
       
-      const emailHeader = req.headers['x-jira-email'];
-      const email = (emailHeader ? (Array.isArray(emailHeader) ? emailHeader[0] : emailHeader) : process.env.JIRA_USER_EMAIL)?.trim();
+      const emailHeader = req.headers['x-jira-username'] || req.headers['x-jira-email'];
+      const email = (emailHeader ? (Array.isArray(emailHeader) ? emailHeader[0] : emailHeader) : (process.env.JIRA_USERNAME || process.env.JIRA_USER_EMAIL))?.trim();
       
       const tokenHeader = req.headers['x-jira-token'];
       const token = (tokenHeader ? (Array.isArray(tokenHeader) ? tokenHeader[0] : tokenHeader) : process.env.JIRA_API_TOKEN)?.trim();
@@ -74,6 +75,7 @@ async function startServer() {
         authorizationHeader = `Basic ${basicAuth}`;
       } else {
         authorizationHeader = `Bearer ${token}`; // For Jira PAT (Personal Access Token)
+        console.log(`[Jira Proxy] Using Bearer Token (Personal Access Token)`);
       }
 
       const config: any = {
@@ -88,9 +90,23 @@ async function startServer() {
       if (req.method !== 'GET' && req.method !== 'HEAD') {
         config.data = req.body;
       }
-      const response = await axios(config);
+
+      console.log(`[Jira Proxy] Forwarding to: ${config.method} ${config.url}`);
+      let response;
+      try {
+        response = await axios(config);
+        console.log(`[Jira Proxy] Success. Status code: ${response.status}`);
+      } catch (error: any) {
+        if (error.response?.status === 401 && authorizationHeader.startsWith('Basic ')) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+          response = await axios(config);
+        } else {
+          throw error;
+        }
+      }
       res.json(response.data);
     } catch (error: any) {
+      console.error(`[Jira Proxy] Error forwarding request to Jira: ${error.message}`);
       if (!error.response) {
         return res.status(500).json({ error: `Network error or invalid domain. Message: ${error.message}` });
       }
