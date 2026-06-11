@@ -31,8 +31,18 @@ const queryClient = new QueryClient();
 
 import { TooltipProvider } from '../components/ui/tooltip';
 
+const DEMO_USER = {
+  uid: 'demo',
+  email: 'demo@devcommand.app',
+  displayName: 'Demo User',
+  photoURL: null,
+  emailVerified: true,
+} as unknown as User;
+
 export default function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() =>
+    localStorage.getItem('devMode') === 'true' ? DEMO_USER : null
+  );
   const [loading, setLoading] = useState(true);
   const { config } = useDashboardStore();
 
@@ -49,12 +59,21 @@ export default function App() {
   }, [config.theme]);
 
   useEffect(() => {
+    if (localStorage.getItem('devMode') === 'true') {
+      setLoading(false);
+      return;
+    }
     const unsubscribe = subscribeToAuthChanges((u) => {
       setUser(u);
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
+
+  const handleDemoLogin = () => {
+    localStorage.setItem('devMode', 'true');
+    setUser(DEMO_USER);
+  };
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center bg-background text-muted-foreground">Loading Dev Command...</div>;
@@ -64,20 +83,20 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
-          <AppContent user={user} />
+          <AppContent user={user} onDemoLogin={handleDemoLogin} />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
 }
 
-function AppContent({ user }: { user: User | null }) {
+function AppContent({ user, onDemoLogin }: { user: User | null; onDemoLogin: () => void }) {
   const location = useLocation();
   const isPublicPokerRoute = location.pathname.startsWith('/poker/room/');
 
   // If there's no user, and this is not a public shared poker room URL, redirect to Login
   if (!user && !isPublicPokerRoute) {
-    return <LoginView />;
+    return <LoginView onDemoLogin={onDemoLogin} />;
   }
 
   return (

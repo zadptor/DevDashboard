@@ -4,7 +4,7 @@ import { Button } from '../../components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import { loginWithGoogle } from '../lib/auth';
 
-export default function LoginView() {
+export default function LoginView({ onDemoLogin }: { onDemoLogin?: () => void }) {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -28,15 +28,22 @@ export default function LoginView() {
           <CardTitle className="text-2xl font-bold">Dev Command</CardTitle>
           <CardDescription className="text-muted-foreground mt-2">Sign in to sync your productivity metrics</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Button 
-            className="w-full bg-card text-foreground border border-border hover:bg-muted bg-card  border-border dark:hover:bg-neutral-800 shadow-sm"
+        <CardContent className="space-y-3">
+          <Button
+            className="w-full bg-card text-foreground border border-border hover:bg-muted border-border dark:hover:bg-neutral-800 shadow-sm"
             onClick={handleLogin}
             disabled={loading}
           >
             {loading ? 'Signing in...' : 'Continue with Google'}
           </Button>
-          <p className="text-xs text-center text-muted-foreground mt-6">
+          <Button
+            variant="outline"
+            className="w-full border-dashed text-muted-foreground hover:text-foreground"
+            onClick={onDemoLogin}
+          >
+            Preview without signing in
+          </Button>
+          <p className="text-xs text-center text-muted-foreground mt-4">
             By continuing, you agree to our Terms of Service and Privacy Policy.
           </p>
         </CardContent>
